@@ -1,0 +1,21 @@
+<div id="myGrid" class="ag-theme-alpine">
+    <ag-grid-angular style="width: 100%; padding: 20px; height: 85vh;" class="ag-theme-alpine"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef"
+        [gridOptions]="gridOptions"
+        [sideBar]="sideBar"
+        [rowData]="rowData"
+        
+        [frameworkComponents]="frameworkComponents"
+        
+        [modules]="modules"
+        
+        enableCharts
+        suppressRowClickSelection>
+    </ag-grid-angular>
+</div>
+<div style="padding: 10px 60px;width: 100%;">
+    <button mat-raised-button color="primary" (click)="addRow()">Add Row</button>
+    <button mat-raised-button color="primary" style="margin-left: 30px;" (click)="saveData()">Save</button>    
+    <button mat-raised-button color="warn" style="margin-left: 30px;" (click)="deleteSelected()">Delete</button>   
+</div>
