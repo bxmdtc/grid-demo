@@ -4,11 +4,16 @@
 @import "~bootstrap/dist/css/bootstrap.min.css";
 
 .reg-green {
-    /* background-color: #d9ffd9 */
+    background-color: #d9ffd9
 }
 
 .reg-red {
-    /* background-color: #ffe0e0 */
+    background-color: #ffe0e0
 }
+
+.sb-label {
+    color: hotpink !important;
+}
+
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

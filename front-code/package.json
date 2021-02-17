@@ -1,13 +1,12 @@
 {
-  "name": "ag-grid-angular-cli-example",
-  "version": "25.0.0",
-  "description": "ag-Grid Angular Example Using Angular CLI",
+  "name": "ag-grid-demo",
+  "version": "1.0.0",
+  "description": "ag-Grid Example",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ag-grid/ag-grid-angular-cli.git"
+    "url": "https://github.com/bxmdtc/grid-demo.git"
   },
-  "author": "Sean Landsman <sean@thelandsmans.com>",
   "angular-cli": {},
   "scripts": {
     "start": "ng serve --proxy-config proxy.json --port 4200",

@@ -1,7 +1,36 @@
-<div style="width: 40vw; min-height: 60vh;">
-    <p>dialog works!</p>
+<div style="width: 40vw; min-height: 50vh;">
+    <div style="width: 100%; padding: 30px 10vw;"  align="center">
+        <mat-form-field style="width: 100%;">
+            <mat-label>Name</mat-label>
+            <input matInput type="text" [(ngModel)]="row.name">
+            <button mat-button *ngIf="row.name" matSuffix mat-icon-button aria-label="Clear" (click)="row.name=''">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-form-field>
+    </div>
+    <div style="width: 100%; padding: 30px 10vw;"  align="center">
+        <mat-form-field style="width: 100%;">
+            <mat-label>Country</mat-label>
+            <mat-select [(value)]="row.country">
+              <mat-option *ngFor="let country of COUNTRY" [value]="country">
+                <img style="padding-right: 10px;" src="https://flags.fmcdn.net/data/flags/mini/{{COUNTRY_CODES[country]}}.png">
+                {{country}}
+              </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div style="width: 100%; padding: 30px 10vw;"  align="center">
+        <mat-form-field style="width: 100%;">
+            <mat-label>Bank Balance</mat-label>
+            <input matInput type="text" [(ngModel)]="row.bankBalance">
+            <button mat-button *ngIf="row.bankBalance" matSuffix mat-icon-button aria-label="Clear" (click)="row.bankBalance=''">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-form-field>
+    </div>
+
 </div>
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Cancel</button>
-    <button mat-button [mat-dialog-close]="true" cdkFocusInitial>OK</button>
+    <button mat-button [mat-dialog-close]="row">OK</button>
 </mat-dialog-actions>

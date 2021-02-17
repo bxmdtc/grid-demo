@@ -1,6 +1,8 @@
 import { AllModules, ColumnApi, GetContextMenuItemsParams, GridApi, GridOptions, MenuItemDef, Module } from '@ag-grid-enterprise/all-modules';
-import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import RefData from 'app/data/refData';
 import { SampleDataDTO } from 'app/model/DataDTO.model';
 import { SampleDataService } from 'app/shared/service/sample-data.service';
 
@@ -24,7 +26,8 @@ export class CustomGridExampleComponent implements OnInit {
 
   constructor(
       private sampleDataService: SampleDataService,
-      public dialog: MatDialog
+      public dialog: MatDialog,
+      private _snackBar: MatSnackBar
     ) { }
 
   ngOnInit(): void {
@@ -41,7 +44,6 @@ export class CustomGridExampleComponent implements OnInit {
         value => { 
             var newRow = [value];
             this.api.applyTransaction({ add: newRow })
-            console.log(this.rowData);
         },
         error => {}
     );
@@ -52,6 +54,7 @@ export class CustomGridExampleComponent implements OnInit {
     this.sampleDataService.saveAll(this.rowData).subscribe(
         value => { 
             console.log("Saving data successfully");
+            this.openSnackBar("Save Completed!");
         },
         error => { console.log("error while saving data"); }
     );
@@ -61,7 +64,10 @@ export class CustomGridExampleComponent implements OnInit {
     var selectedData: SampleDataDTO[] = this.api.getSelectedRows();
     this.api.applyTransaction({ remove: selectedData });
     this.sampleDataService.deleteAll(selectedData.map(row => row.id).filter(id => id != undefined))
-                            .subscribe(value => {console.log("Delete succuess.")});
+                            .subscribe(value => {
+                                console.log("Delete succuess.");
+                                this.openSnackBar("Delete Completed!");
+                            });
   }
 
   getRowData() {
@@ -74,14 +80,30 @@ export class CustomGridExampleComponent implements OnInit {
     console.log(rowData);
   }
 
+  openSnackBar(message: string) {
+    this._snackBar.open(message, "", {
+      duration: 2000,
+      panelClass: "sb-label"
+    });
+  }
+
   getContextMenuItems(params: GetContextMenuItemsParams): (string | MenuItemDef)[] {
       const row: SampleDataDTO = params.node.data;
       return [
           {
               name: 'Edit Row',
               action: () => {
-                  console.log("Editing Row...", row);
-                  this.dialog.open(RightClickEditDialog);
+                  const dialogRef = this.dialog.open(RightClickEditDialog, {
+                      data: row
+                  });
+
+                  dialogRef.afterClosed().subscribe(result => {
+                      if(result) {
+                          console.log("dialog result:", result);
+                          this.api.applyTransaction({update: [result]});
+                      }
+                  })
+
               }
           },
           'separator',
@@ -147,7 +169,8 @@ export class CustomGridExampleComponent implements OnInit {
         this.columnApi = params.columnApi;
         this.api.sizeColumnsToFit();
     },
-    getContextMenuItems: params => this.getContextMenuItems(params)
+    getContextMenuItems: params => this.getContextMenuItems(params),
+    getRowNodeId: data => data.id
   }
 
   public defaultColDef = {
@@ -197,8 +220,7 @@ export class CustomGridExampleComponent implements OnInit {
                 // rowGroupIndex: 0,
                 // pivotIndex: 0,
                 cellEditorParams: {
-                    values: ['English', 'Spanish', 'French', 'Portuguese', 'German',
-                        'Swedish', 'Norwegian', 'Italian', 'Greek', 'Icelandic', 'Portuguese', 'Maltese']
+                    values: RefData.LANGUAGE
                 },
                 // pinned: 'left',
                 headerTooltip: "Example tooltip for Language",
@@ -219,9 +241,7 @@ export class CustomGridExampleComponent implements OnInit {
                 cellEditor: 'agRichSelectCellEditor',
                 cellEditorParams: {
                     cellRenderer: countryCellRenderer,
-                    values: ["Argentina", "Brazil", "China", "Colombia", "France", "Germany", "Greece", "Iceland", "Ireland",
-                        "Italy", "Malta", "Portugal", "Norway", "Peru", "Spain", "Sweden", "United Kingdom", "United States",
-                        "Uruguay", "Venezuela", "Belgium", "Luxembourg"]
+                    values: RefData.COUNTRY
                 },
                 // pinned: 'left',
                 floatCell: true,
@@ -319,7 +339,7 @@ export class CustomGridExampleComponent implements OnInit {
         resizable: true,
         cellEditor: 'agSelectCellEditor',
         cellEditorParams: {
-            values: [0, 1, 2, 3, 4, 5]
+            values: RefData.RATINGS
         },
         filterParams: { cellRenderer: ratingFilterRenderer }
     },
@@ -400,7 +420,7 @@ function countryCellRenderer(params) {
   if (params.value === "" || params.value === undefined || params.value === null) {
       return '';
   } else {
-      var flag = '<img class="flag" border="0" width="15" height="10" src="https://flags.fmcdn.net/data/flags/mini/' + COUNTRY_CODES[params.value] + '.png">';
+      var flag = '<img border="0" width="15" height="10" src="https://flags.fmcdn.net/data/flags/mini/' + RefData.COUNTRY_CODES[params.value] + '.png">';
       return flag + ' ' + params.value;
   }
 }
@@ -452,37 +472,22 @@ function ratingRendererGeneral(value, forFilter) {
   return result;
 }
 
-const COUNTRY_CODES = {
-  Ireland: "ie",
-  Luxembourg: "lu",
-  Belgium: "be",
-  Spain: "es",
-  China: "cn",
-  "United Kingdom": "gb",
-  "United States": "us",
-  France: "fr",
-  Germany: "de",
-  Sweden: "se",
-  Italy: "it",
-  Greece: "gr",
-  Iceland: "is",
-  Portugal: "pt",
-  Malta: "mt",
-  Norway: "no",
-  Brazil: "br",
-  Argentina: "ar",
-  Colombia: "co",
-  Peru: "pe",
-  Venezuela: "ve",
-  Uruguay: "uy"
-};
 
 @Component({
     selector: 'right-click-edit-dialog',
     templateUrl: 'right-click-edit-dialog.html',
   })
 export class RightClickEditDialog {
+    row: SampleDataDTO;
+    COUNTRY: string[];
+    COUNTRY_CODES;
 
-
-
+    constructor(
+        public dialogRef: MatDialogRef<RightClickEditDialog>,
+        @Inject(MAT_DIALOG_DATA) public data: SampleDataDTO
+    ) {
+        this.row = JSON.parse(JSON.stringify(data));
+        this.COUNTRY = RefData.COUNTRY;
+        this.COUNTRY_CODES = RefData.COUNTRY_CODES;
+    }
 }

@@ -11,6 +11,11 @@ import { MatButtonModule } from '@angular/material/button';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import { HttpClientModule } from "@angular/common/http";
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatSelectModule} from '@angular/material/select';
 
 @NgModule({
     imports: [
@@ -21,7 +26,12 @@ import { HttpClientModule } from "@angular/common/http";
         BrowserAnimationsModule,
         MatButtonModule,
         MatDialogModule,
-        MatToolbarModule
+        MatToolbarModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatSnackBarModule,
+        MatSelectModule
     ],
     declarations: [
         AppComponent,

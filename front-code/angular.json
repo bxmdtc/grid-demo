@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ag-grid-angular-cli": {
+    "ag-grid-demo": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -53,18 +53,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "ag-grid-angular-cli:build"
+            "browserTarget": "ag-grid-demo:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "ag-grid-angular-cli:build:production"
+              "browserTarget": "ag-grid-demo:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ag-grid-angular-cli:build"
+            "browserTarget": "ag-grid-demo:build"
           }
         },
         "test": {
@@ -99,7 +99,7 @@
         }
       }
     },
-    "ag-grid-angular-cli-e2e": {
+    "ag-grid-demo-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "architect": {
@@ -107,11 +107,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "ag-grid-angular-cli:serve"
+            "devServerTarget": "ag-grid-demo:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "ag-grid-angular-cli:serve:production"
+              "devServerTarget": "ag-grid-demo:serve:production"
             }
           }
         },
@@ -127,5 +127,5 @@
       }
     }
   },
-  "defaultProject": "ag-grid-angular-cli"
+  "defaultProject": "ag-grid-demo"
 }
