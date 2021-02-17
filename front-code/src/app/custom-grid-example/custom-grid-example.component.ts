@@ -22,18 +22,6 @@ export class CustomGridExampleComponent implements OnInit {
   public api: GridApi;
   public columnApi: ColumnApi;
 
-//   public groupColumn = {
-//     headerName: "Group",
-//     width: 200,
-//     field: 'name',
-//     headerCheckboxSelection: true,
-//     headerCheckboxSelectionFilteredOnly: true,
-//     cellRenderer: 'agGroupCellRenderer',
-//     cellRendererParams: {
-//         checkbox: true
-//     }
-//   };
-
   constructor(
       private sampleDataService: SampleDataService,
       public dialog: MatDialog
@@ -101,6 +89,7 @@ export class CustomGridExampleComponent implements OnInit {
           'copyWithHeaders',
           'paste',
           'separator',
+          'chartRange',
           'export'
       ]
   }
